@@ -7,7 +7,26 @@ const nextConfig = {
         protocol: "https",
         hostname: "rickandmortyapi.com",
         port: "",
-        // pathname: "/account123/**",
+      },
+      {
+        protocol: "https",
+        hostname: "reqres.in",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "627ec72cb75a25d3f3bd0acb.mockapi.io",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "cloudflare-ipfs.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "en.gravatar.com",
+        port: "",
       },
     ],
   },
