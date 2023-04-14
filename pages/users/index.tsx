@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { UserType } from "../../types";
-import { axiosFetcher, mockApiUrl } from "../api";
+import { axiosFetcher, mockApiUrl, useGetUsers } from "../api";
 import Button from "../components/Button";
 
 interface Props {

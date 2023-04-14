@@ -3,10 +3,11 @@ import * as Yup from "yup";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
+import { useRouter } from "next/router";
 
 import Button from "./components/Button";
 import { UserType } from "../types";
-import { createUser, axiosFetcher, mockApiUrl } from "./api";
+import { createUser, axiosFetcher, mockApiUrl, useGetUsers } from "./api";
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("Please enter first stam"),
@@ -22,6 +23,7 @@ const intialValues: Omit<UserType, "id"> = {
 };
 
 export default function CreateUser() {
+  const { users } = useGetUsers();
   const { data, error, mutate } = useSWR(mockApiUrl, axiosFetcher);
 
   async function handleSubmit(values: typeof intialValues) {
@@ -38,11 +40,16 @@ export default function CreateUser() {
 
   return (
     <div className="w-full">
+      <p>Users count: {users?.length}</p>
+      <br />
       <Link href={"/users"}>
-        <Button>back to users</Button>
+        <Button className="p-3 rounded-md border">back to users</Button>
       </Link>
-
+      <br />
+      <br />
+      <hr />
       <h1 className="mt-6 text-3xl font-bold mx-auto mb-8">Create User</h1>
+      <br />
       <hr />
 
       <div className="overflow-hidden w-full h-full">
