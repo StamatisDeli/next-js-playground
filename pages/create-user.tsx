@@ -5,7 +5,7 @@ import Image from "next/image";
 import useSWR from "swr";
 
 import Button from "./components/Button";
-import { UserType } from "./types";
+import { UserType } from "../types";
 import { createUser, axiosFetcher, mockApiUrl } from "./api";
 
 const validationSchema = Yup.object().shape({
