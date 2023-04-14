@@ -1,28 +1,18 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import { SessionProvider } from "next-auth/react";
 
-interface Props {
-  children: React.ReactNode;
-}
+import Layout from "./components/Layout";
 
-export function Layout({ children }: Props) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
-    <div className="flex min-h-screen w-full flex-col justify-between">
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
-    </div>
-  );
-}
-
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <>
+    <SessionProvider session={session}>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </>
+    </SessionProvider>
   );
 }
