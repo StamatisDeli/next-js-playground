@@ -1,6 +1,6 @@
 import axios from "axios";
 import useSWR from "swr";
-import { UserType } from "../users/types";
+import { UserType } from "../types";
 
 /**
  * https://reqres.in/api/users
