@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import Button from "../components/Button";
 import { axiosFetcher, mockApiUrl } from "../api";
-import { UserType } from "./types";
+import { UserType } from "../types";
 
 interface Props {
   user: UserType;
