@@ -37,7 +37,7 @@ export function useGetRnMCharacters() {
   const { data, error, isLoading } = useSWR(RnMUrl, axiosFetcher);
 
   return {
-    characters: data.results,
+    characters: data?.results,
     isLoading,
     error,
   };
