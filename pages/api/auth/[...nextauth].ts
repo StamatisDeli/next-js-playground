@@ -50,6 +50,7 @@ export const authOptions: NextAuthOptions = {
 
         //   // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         // }
+        console.log("NEXTAUTH_SECRET", process.env.NEXTAUTH_SECRET);
 
         if (
           credentials?.username === "example" &&
@@ -73,11 +74,12 @@ export const authOptions: NextAuthOptions = {
   //       return token;
   //     },
   //   },
-  callbacks: {
-    async session({ session, user, token }) {
-      return session;
-    },
-  },
+  // callbacks: {
+  //   async session({ session, user, token }) {
+  //     return session;
+  //   },
+  // },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
