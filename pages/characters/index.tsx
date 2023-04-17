@@ -1,7 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { axiosFetcher } from "../api";
+
+import { axiosFetcher, R_M_URL } from "../api";
 
 type CharacterProps = {
   id: number;
@@ -72,10 +73,8 @@ export default function Characters({ characters }: Props) {
 // };
 export const getServerSideProps = async () => {
   try {
-    const data = await axiosFetcher(
-      "https://rickandmortyapi.com/api/character"
-    );
-    // console.log("DATA", data);
+    const data = await axiosFetcher(R_M_URL);
+
     return {
       props: {
         characters: data.results,

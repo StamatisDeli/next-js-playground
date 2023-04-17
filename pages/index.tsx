@@ -2,13 +2,25 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import useSWR from "swr";
 
-import { useGetUsers, useGetRnMCharacters } from "./api";
+import {
+  axiosFetcher,
+  MOCK_API_URL,
+  R_M_URL,
+  useGetUsers,
+  useGetRnMCharacters,
+} from "./api";
+import { UserType } from "../types";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-  const { users } = useGetUsers();
-  const { characters } = useGetRnMCharacters();
+interface SSRProps {
+  users: UserType[];
+  characters: Array<any>;
+}
+
+export default function Home({ users, characters }: SSRProps) {
+  // const { users } = useGetUsers();
+  // const { characters } = useGetRnMCharacters();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -139,3 +151,19 @@ export default function Home() {
     </main>
   );
 }
+
+export const getServerSideProps = async () => {
+  try {
+    const users = await axiosFetcher(MOCK_API_URL);
+    const { results: characters } = await axiosFetcher(R_M_URL);
+    console.log("GETTING USERS AND CHARACTERS");
+    return {
+      props: {
+        users,
+        characters,
+      },
+    };
+  } catch (err) {
+    console.log(err);
+  }
+};

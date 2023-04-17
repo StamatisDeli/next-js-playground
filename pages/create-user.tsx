@@ -3,11 +3,12 @@ import * as Yup from "yup";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/router";
 
 import Button from "./components/Button";
 import { UserType } from "../types";
-import { createUser, axiosFetcher, mockApiUrl, useGetUsers } from "./api";
+import { createUser, axiosFetcher, MOCK_API_URL, useGetUsers } from "./api";
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("Please enter first stam"),
@@ -22,17 +23,28 @@ const intialValues: Omit<UserType, "id"> = {
   avatar: "",
 };
 
-export default function CreateUser() {
-  const { users } = useGetUsers();
-  const { data, error, mutate } = useSWR(mockApiUrl, axiosFetcher);
+interface SSRProps {
+  users: UserType[];
+}
+
+export default function CreateUser({ users }: SSRProps) {
+  const { data: clientUsersData } = useSWR(MOCK_API_URL, axiosFetcher, {
+    initialData: users, // populate with SSR data, and leave SWR auto update
+    revalidateOnMount: true,
+  });
+
+  // const { mutate } = useSWR(MOCK_API_URL, axiosFetcher);
+  const { trigger, isMutating: isLoading } = useSWRMutation(
+    MOCK_API_URL,
+    axiosFetcher
+  );
 
   async function handleSubmit(values: typeof intialValues) {
     try {
-      const res = await createUser(mockApiUrl, values);
+      const res = await createUser(MOCK_API_URL, values);
       console.log("Response:", res.data);
-
       // Update data using mutate
-      mutate();
+      trigger();
     } catch (error) {
       console.error("Error:", error);
     }
@@ -40,7 +52,7 @@ export default function CreateUser() {
 
   return (
     <div className="w-full">
-      <p>Users count: {users?.length}</p>
+      <p>Users count: {clientUsersData?.length}</p>
       <br />
       <Link href={"/users"}>
         <Button className="p-3 rounded-md border">back to users</Button>
@@ -170,14 +182,13 @@ export default function CreateUser() {
 
                     <section className="flex w-full justify-between">
                       <Button
-                        // className={`${
-                        //   isLoading ? "text-gray-500" : "text-gray-800"
-                        // } rounded-md py-2 px-4 uppercase font-bold w-32`}
-                        // disabled={isLoading}
+                        className={`${
+                          isLoading ? "text-gray-500" : "text-gray-800"
+                        } rounded-md py-2 px-4 uppercase font-bold w-32`}
+                        disabled={isLoading}
                         type="submit"
                       >
-                        {/* {isLoading ? "Saving..." : "Save"} */}
-                        Save
+                        {isLoading ? "Saving..." : "Save"}
                       </Button>
                     </section>
                   </Form>
@@ -190,3 +201,17 @@ export default function CreateUser() {
     </div>
   );
 }
+
+export const getServerSideProps = async () => {
+  try {
+    const data = await axiosFetcher(MOCK_API_URL);
+    console.log("GETTING USERS");
+    return {
+      props: {
+        users: data,
+      },
+    };
+  } catch (err) {
+    console.log(err);
+  }
+};

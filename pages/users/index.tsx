@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { UserType } from "../../types";
-import { axiosFetcher, mockApiUrl, useGetUsers } from "../api";
+import { axiosFetcher, MOCK_API_URL, useGetUsers } from "../api";
 import Button from "../components/Button";
 
 interface Props {
@@ -58,8 +58,8 @@ export default function Users({ users }: Props) {
 
 export const getServerSideProps = async () => {
   try {
-    const data = await axiosFetcher(mockApiUrl);
-    // console.log("DATA", data);
+    const data = await axiosFetcher(MOCK_API_URL);
+
     console.log("GETTING USERS", data);
     return {
       props: {
