@@ -1,17 +1,16 @@
+import * as React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 import Image from "next/image";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
+import { useRouter } from "next/router";
 
 import Button from "../components/Button";
 import { RobotType } from "../../types";
-import { createUser, axiosFetcher, MOCK_API_URL, useGetUsers } from "../api";
+import { createRobot } from "../api";
 
 const validationSchema = Yup.object().shape({
-  first_name: Yup.string().required("Please enter first stam"),
-  last_name: Yup.string().required("Please enter last name"),
+  name: Yup.string().required("Please enter first stam"),
   email: Yup.string().required("Please enter email"),
 });
 
@@ -21,39 +20,30 @@ const intialValues: RobotType = {
   avatar: "",
 };
 
-interface SSRProps {
-  robots: RobotType[];
-}
-
-export default function CreateRobot({ robots }: SSRProps) {
-  const { data: clientUsersData } = useSWR(MOCK_API_URL, axiosFetcher, {
-    initialData: robots, // populate with SSR data, and leave SWR auto update
-    revalidateOnMount: true,
-  });
-
-  const { trigger, isMutating: isLoading } = useSWRMutation(
-    MOCK_API_URL,
-    axiosFetcher
-  );
-
+export default function CreateRobot() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(false);
   async function handleSubmit(values: typeof intialValues) {
+    setIsLoading(true);
+
     const finalObj = {
       ...values,
       avatar: `https://robohash.org/${values.avatar}?set=set4`,
     };
     try {
-      const res = await createUser(MOCK_API_URL, values);
+      const res = await createRobot(finalObj);
       console.log("Response:", res.data);
-      // Update data using mutate
-      trigger();
+
+      router.push("/robots");
+      setIsLoading(false);
     } catch (error) {
       console.error("Error:", error);
+      setIsLoading(false);
     }
   }
 
   return (
     <div className="w-full">
-      <p>Users count: {clientUsersData?.length}</p>
       <br />
       <Link href={"/robots"}>
         <Button className="p-3 rounded-md border">back to robots</Button>
@@ -71,7 +61,7 @@ export default function CreateRobot({ robots }: SSRProps) {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values }) => {
+          {({ values, errors }) => {
             return (
               <div className="text-left bg-white p-5 flex flex-row text-gray-800">
                 <div className="grid grid-cols-2 gap-4 mx-auto">
@@ -178,17 +168,3 @@ export default function CreateRobot({ robots }: SSRProps) {
     </div>
   );
 }
-
-export const getServerSideProps = async () => {
-  try {
-    const data = await axiosFetcher(MOCK_API_URL);
-    console.log("GETTING USERS");
-    return {
-      props: {
-        users: data,
-      },
-    };
-  } catch (err) {
-    console.log(err);
-  }
-};

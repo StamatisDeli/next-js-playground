@@ -7,7 +7,6 @@ import Button from "../components/Button";
 
 export default function Users() {
   const { robots, error, isLoading } = useGetRobots();
-  console.log(robots);
 
   if (error) return <div>Failed to load</div>;
   if (isLoading) return <div>Loading...</div>;
@@ -28,7 +27,7 @@ export default function Users() {
       <br />
       <div className="grid grid-cols-4 gap-5">
         {robots?.map((item: any) => (
-          <Link key={item.id} href={`/robots/${item.id}`}>
+          <Link key={item.id} href={`/robots/${item.id}/`}>
             <h2>{item.name}</h2>
             <Image alt={item.name} src={item.avatar} width={200} height={200} />
           </Link>

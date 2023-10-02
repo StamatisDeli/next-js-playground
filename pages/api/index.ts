@@ -43,8 +43,17 @@ export function useGetRnMCharacters() {
   };
 }
 
+export function useGetRobot(id: number) {
+  const { data, error, isLoading } = useSWR(`/api/robot/${id}`, axiosFetcher);
+
+  return {
+    robot: data,
+    isLoading,
+    error,
+  };
+}
 export function useGetRobots() {
-  const { data, error, isLoading } = useSWR("/api/robots", axiosFetcher);
+  const { data, error, isLoading } = useSWR("/api/robot/", axiosFetcher);
 
   return {
     robots: data,
@@ -52,3 +61,18 @@ export function useGetRobots() {
     error,
   };
 }
+export const fetchRobot = async (id: any) => {
+  const { data } = await axios.get(`/api/robot/${id}`);
+
+  return data;
+};
+export const createRobot = async (robotData: Partial<UserType>) => {
+  const { data } = await axios.post("/api/robot/", robotData);
+
+  return data;
+};
+export const deleteRobot = async (id: number) => {
+  const { data } = await axios.delete(`/api/robot/${id}`);
+
+  return data;
+};
