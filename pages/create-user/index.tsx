@@ -6,9 +6,9 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/router";
 
-import Button from "./components/Button";
-import { UserType } from "../types";
-import { createUser, axiosFetcher, MOCK_API_URL, useGetUsers } from "./api";
+import Button from "../components/Button";
+import { UserType } from "../../types";
+import { createUser, axiosFetcher, MOCK_API_URL, useGetUsers } from "../api";
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("Please enter first stam"),

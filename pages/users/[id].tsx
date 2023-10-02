@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Button from "../components/Button";
-import { axiosFetcher, mockApiUrl } from "../api";
+import { axiosFetcher, MOCK_API_URL } from "../api";
 import { UserType } from "../../types";
 
 interface Props {
@@ -42,7 +42,7 @@ export const getServerSideProps = async (
   const { params } = context;
 
   try {
-    const data = await axiosFetcher(`${mockApiUrl}/${params?.id}`);
+    const data = await axiosFetcher(`${MOCK_API_URL}/${params?.id}`);
     return {
       props: {
         user: data,

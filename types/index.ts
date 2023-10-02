@@ -5,3 +5,10 @@ export type UserType = {
   last_name: string;
   avatar: string;
 };
+
+export type RobotType = {
+  id?: number;
+  email: string;
+  name: string;
+  avatar: string;
+};

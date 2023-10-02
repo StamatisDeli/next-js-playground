@@ -5,7 +5,7 @@ import { UserType } from "../../types";
 /**
  * https://reqres.in/api/users
  */
-export const usersUrl = "'https://jsonplaceholder.typicode.com/posts";
+export const usersUrl = "https://jsonplaceholder.typicode.com/posts";
 export const MOCK_API_URL =
   "https://627ec72cb75a25d3f3bd0acb.mockapi.io/api/users";
 
@@ -38,6 +38,16 @@ export function useGetRnMCharacters() {
 
   return {
     characters: data?.results,
+    isLoading,
+    error,
+  };
+}
+
+export function useGetRobots() {
+  const { data, error, isLoading } = useSWR("/api/robots", axiosFetcher);
+
+  return {
+    robots: data,
     isLoading,
     error,
   };
